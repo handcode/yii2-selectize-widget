@@ -35,6 +35,9 @@ class InputWidget extends \yii\widgets\InputWidget
     public $clientOptions;
 
     public $cssFlavour = 'default';
+
+    public $confirmDelete = false;
+
     /**
      * @inheritdoc
      */
@@ -53,6 +56,11 @@ class InputWidget extends \yii\widgets\InputWidget
         if ($this->loadUrl !== null) {
             $url = Url::to($this->loadUrl);
             $this->clientOptions['load'] = new JsExpression("function (query, callback) { if (!query.length) return callback(); $.getJSON('$url', { {$this->queryParam}: query }, function (data) { callback(data); }).fail(function () { callback(); }); }");
+        }
+        if ($this->confirmDelete && empty($this->clientOptions['onDelete'])) {
+            $this->clientOptions['onDelete'] = new JsExpression("function(values) {
+        return confirm(values.length > 1 ? 'Are you sure you want to remove these ' + values.length + ' items?' : 'Are you sure you want to remove \"' + values[0] + '\"?');
+    }");
         }
 
         $options = Json::encode($this->clientOptions);
