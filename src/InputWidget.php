@@ -7,6 +7,7 @@
 
 namespace dosamigos\selectize;
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\JsExpression;
@@ -33,6 +34,7 @@ class InputWidget extends \yii\widgets\InputWidget
      */
     public $clientOptions;
 
+    public $cssFlavour = 'default';
     /**
      * @inheritdoc
      */
@@ -55,7 +57,26 @@ class InputWidget extends \yii\widgets\InputWidget
 
         $options = Json::encode($this->clientOptions);
         $view = $this->getView();
-        SelectizeAsset::register($view);
+        $assetBundle = SelectizeAsset::register($view);
+        switch ($this->cssFlavour) {
+            case 'bs3':
+            case 'bootstrap3':
+            $themeCss = ['css/selectize.bootstrap3.css'];
+            break;
+            case 'bs4':
+            case 'bootstrap4':
+                $themeCss = ['css/selectize.bootstrap4.css'];
+                break;
+            case 'bs5':
+            case 'bootstrap5':
+                $themeCss = ['css/selectize.bootstrap5.css'];
+                break;
+            default:
+                $themeCss = ['css/selectize.default.css'];
+            break;
+        }
+        $assetBundle->css = ArrayHelper::merge($assetBundle->css, $themeCss);
+
         $view->registerJs("jQuery('#$id').selectize($options);");
     }
 }
