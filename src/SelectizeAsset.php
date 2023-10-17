@@ -22,7 +22,7 @@ class SelectizeAsset extends AssetBundle
         'css/selectize.css',
     ];
     public $js = [
-        'js/standalone/selectize.js',
+        'js/selectize.js',
     ];
     public $depends = [
         'yii\web\JqueryAsset',
